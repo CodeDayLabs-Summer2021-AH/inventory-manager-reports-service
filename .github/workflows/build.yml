@@ -26,6 +26,8 @@ jobs:
       - name: Gradle Cache
         uses: burrunan/gradle-cache-action@v1
       #Run Tests
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
       - name: Run Tests
         run: ./gradlew test
       
