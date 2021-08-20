@@ -23,17 +23,19 @@ jobs:
         with:
           java-version: '11'
       #Set up Maven cache
-      - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+      - name: Gradle Cache
+        uses: burrunan/gradle-cache-action@v1
       #Run Tests
       - name: Run Tests
         run: mvn -B test -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-
+      
+  #Build Job
+  build: 
+    name: Gradle Build Action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: gradle/gradle-build-action@v1.4.1
+      
   #Sonar's Job
   sonar:
     #Depends on test's job
@@ -58,14 +60,9 @@ jobs:
           path: ~/.sonar/cache
           key: ${{ runner.os }}-sonar
           restore-keys: ${{ runner.os }}-sonar
-      #Set up Maven cache
-      - name: Cache Maven packages
-        #This action allows caching dependencies and build outputs to improve workflow execution time.
-        uses: actions/cache@v1
-        with:
-          path: ~/.m2
-          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
-          restore-keys: ${{ runner.os }}-m2
+      #Set up Gradle cache
+      - name: Gradle Cache
+        uses: burrunan/gradle-cache-action@v1
       #Analyze project with SonarCloud
       - name: Analyze with SonarCloud
         run: mvn -B verify sonar:sonar -Dsonar.projectKey=CodeDayLabs-Summer2021-AH_inventory-manager-reports-service -Dsonar.organization=codedaylabs-summer2021-ah -Dsonar.host.url=https://sonarcloud.io -Dsonar.login=$SONAR_TOKEN -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
