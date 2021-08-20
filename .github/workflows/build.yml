@@ -22,12 +22,11 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: '11'
-      #Set up Maven cache
-      - name: Gradle Cache
-        uses: burrunan/gradle-cache-action@v1
       #Run Tests
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
+      - name: Run Build
+        run: ./gradlew build
       - name: Run Tests
         run: ./gradlew test
       
