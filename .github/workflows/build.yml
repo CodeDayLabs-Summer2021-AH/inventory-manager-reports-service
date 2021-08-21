@@ -25,8 +25,6 @@ jobs:
       #Run Tests
       - name: Change wrapper permissions
         run: chmod +x ./gradlew
-      - name: Run Build
-        run: ./gradlew build
       - name: Run Tests
         run: ./gradlew test
 
@@ -54,6 +52,8 @@ jobs:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle') }}
           restore-keys: ${{ runner.os }}-gradle
+      - name: Change wrapper permissions
+        run: chmod +x ./gradlew
       - name: Build and analyze
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
